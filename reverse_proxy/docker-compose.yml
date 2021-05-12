@@ -1,0 +1,47 @@
+version: '3'
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy-arm:latest
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
+    restart: always
+    environment:
+      DEFAULT_HOST: default.vhost
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs:ro
+      - config:/etc/nginx/conf.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+  whoami:
+    image: jwilder/whoami-arm:latest
+    restart: always
+    environment:
+      - VIRTUAL_HOST=whoami.local
+
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
+    container_name: nginx-proxy-le
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - acme:/etc/acme.sh
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - DEFAULT_EMAIL=<email>
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+    depends_on:
+      - nginx-proxy
+
+volumes:
+  vhost:
+  html:
+  certs:
+  acme:
+  config:
