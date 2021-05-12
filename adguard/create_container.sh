@@ -1,0 +1,1 @@
+docker create --name adguardhome --restart always -v /dockerdata/adguard_work:/opt/adguardhome/work -v /dockerdata/adguard_conf:/opt/adguardhome/conf -p 53:53/tcp -p 53:53/udp -p 67:67/udp -p 68:68/tcp -p 68:68/udp -p 8080:80/tcp -p 4443:443/tcp -p 853:853/tcp -p 3000:3000/tcp adguard/adguardhome:armhf-latest
