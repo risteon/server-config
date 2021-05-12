@@ -1,0 +1,45 @@
+version: '3.2'
+
+services:
+  plex:
+    image: linuxserver/plex:bionic
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
+      - type: bind
+        source: /media/source/on/host1
+        target: /mount1
+        read_only: true
+      - type: bind
+        source: /media/source/on/host2
+        target: /mount2
+        read_only: true
+      - data:/config
+    ports:
+      - "32400:32400"
+      - "32400:32400/udp"
+      - "32469:32469"
+      - "32469:32469/udp"
+      - "5353:5353/udp"
+      - "1900:1900/udp"
+    networks:
+      - proxy_default
+      - default
+    environment:
+      - PGID=1001
+      - PUID=1001
+      - VERSION=docker
+      - UMASK_SET=022
+      - VIRTUAL_PORT=32400
+      - VIRTUAL_HOST=<sub.domain.toplevel>
+      - LETSENCRYPT_HOST=<sub.domain.toplevel>
+
+volumes:
+  data:
+
+networks:
+  proxy_default:
+    external: true 
