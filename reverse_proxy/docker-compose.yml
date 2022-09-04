@@ -1,9 +1,8 @@
 version: '3'
 services:
   nginx-proxy:
-    image: jwilder/nginx-proxy-arm:latest
-    labels:
-      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
+    image: nginxproxy/nginx-proxy:alpine
+    container_name: reverse-nginx-proxy
     restart: always
     environment:
       DEFAULT_HOST: default.vhost
@@ -18,15 +17,19 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
 
   whoami:
-    image: jwilder/whoami-arm:latest
+    #image: stefanscherer/whoami:linux-arm64-2.0.1
+    image: whoami2:latest
     restart: always
+    expose:
+      - "8000"
     environment:
       - VIRTUAL_HOST=whoami.local
+      - VIRTUAL_PORT=8000
 
-  letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
+  acme:
+    image: nginxproxy/acme-companion
     restart: always
-    container_name: nginx-proxy-le
+    container_name: nginx-proxy-acme
     volumes:
       - certs:/etc/nginx/certs:rw
       - acme:/etc/acme.sh
@@ -34,10 +37,11 @@ services:
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      - DEFAULT_EMAIL=<email>
-      - NGINX_PROXY_CONTAINER=nginx-proxy
+      - DEFAULT_EMAIL=c.rist@posteo.de
+      - NGINX_DOCKER_GEN_CONTAINER=reverse-nginx-proxy
+      - NGINX_PROXY_CONTAINER=reverse-nginx-proxy
     depends_on:
-      - nginx-proxy
+      - reverse-nginx-proxy
 
 volumes:
   vhost:
