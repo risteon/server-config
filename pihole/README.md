@@ -6,7 +6,7 @@ Disable resolve listener on Ubuntu: https://www.qualityology.com/tech/ubuntu-por
 Edit `/etc/systemd/resolved.conf`:
 ```
 [Resolve]
-DNS=8.8.8.8   # OR local gateway
+DNS=localhost   # OR local gateway
 #FallbackDNS=
 #Domains=
 #LLMNR=no
