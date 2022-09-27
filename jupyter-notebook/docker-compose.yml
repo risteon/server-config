@@ -1,0 +1,13 @@
+version:  '3'
+services:
+  datascience-notebook:
+      image:    jupyter/datascience-notebook
+      volumes:
+        - workspace:/home/jovyan/work
+      ports:
+        - 8888:8888
+      container_name:   jupyter_notebook
+      command: "start-notebook.sh \
+        --NotebookApp.password=${ACCESS_TOKEN}"
+volumes:
+  workspace:
