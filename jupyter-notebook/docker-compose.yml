@@ -4,10 +4,12 @@ services:
       image:    jupyter/datascience-notebook
       volumes:
         - workspace:/home/jovyan/work
-      ports:
-        - 8888:8888
-      container_name:   jupyter_notebook
-      command: "start-notebook.sh \
-        --NotebookApp.password=${ACCESS_TOKEN}"
+      container_name: jupyter_notebook
+      restart: unless-stopped
+      networks:
+        - reverseproxy-nw
 volumes:
   workspace:
+networks:
+  reverseproxy-nw:
+    external: true
