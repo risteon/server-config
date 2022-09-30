@@ -16,8 +16,33 @@ services:
     restart: unless-stopped
     networks:
       - reverseproxy-nw
+      - homeassistant-nw
+
+	zigbee2mqtt:
+    container_name: zigbee2mqtt
+    image: koenkk/zigbee2mqtt
+    restart: unless-stopped
+    volumes:
+      - zigbee2mqtt_data:/app/data
+      - /run/udev:/run/udev:ro
+    ports:
+      # Frontend port
+      - 8080:8080
+    environment:
+      - TZ=Europe/Berlin
+    devices:
+      # Make sure this matched your adapter location
+      - /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2478546-if00:/dev/ttyACM0
+    networks:
+      - homeassistant-nw
+		group_add:
+      - dialout
+    user: 1000:1000
+
 volumes:
   config:
+  zigbee2mqtt_data:
 networks:
+  homeassistant-nw:
   reverseproxy-nw:
     external: true
