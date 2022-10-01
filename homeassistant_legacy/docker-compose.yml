@@ -1,0 +1,28 @@
+version: '3.2'
+
+services:
+  homeassistant:
+    image: homeassistant/raspberrypi4-homeassistant:stable
+    volumes:
+      - config:/config
+    environment:
+      - TZ=Europe/Berlin
+    restart: always
+    ports:
+      - "8123:8123"
+    networks:
+      - proxy_default
+      - default
+    environment:
+      - VIRTUAL_PORT=8123
+      - VIRTUAL_HOST=<sub.domain.toplevel>
+      - LETSENCRYPT_HOST=<sub.domain.toplevel>
+    
+
+networks:
+  proxy_default:
+    external: true 
+
+volumes:
+  config:
+

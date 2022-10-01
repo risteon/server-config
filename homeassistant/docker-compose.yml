@@ -1,28 +1,63 @@
-version: '3.2'
-
+version: '3'
 services:
   homeassistant:
-    image: homeassistant/raspberrypi4-homeassistant:stable
+    image: lscr.io/linuxserver/homeassistant:latest
+    container_name: homeassistant
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
     volumes:
       - config:/config
+    ports:
+      - 8123:8123 #optional
+    #devices:
+    #  - /path/to/device:/path/to/device #optional
+    restart: unless-stopped
+    networks:
+      - reverseproxy-nw
+      - homeassistant-nw
+
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    volumes:
+      - mosquitto:/mosquitto
+    ports:
+      - 1883:1883
+      - 9001:9001
+    networks:
+      - homeassistant-nw
+
+
+  zigbee2mqtt:
+    container_name: zigbee2mqtt
+    image: koenkk/zigbee2mqtt
+    restart: unless-stopped
+    volumes:
+      - zigbee2mqtt_data:/app/data
+      - /run/udev:/run/udev:ro
+    ports:
+      # Frontend port
+      - 8080:8080
     environment:
       - TZ=Europe/Berlin
-    restart: always
-    ports:
-      - "8123:8123"
+    devices:
+      # Make sure this matched your adapter location
+      - /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2478546-if00:/dev/ttyACM0
     networks:
-      - proxy_default
-      - default
-    environment:
-      - VIRTUAL_PORT=8123
-      - VIRTUAL_HOST=<sub.domain.toplevel>
-      - LETSENCRYPT_HOST=<sub.domain.toplevel>
-    
-
-networks:
-  proxy_default:
-    external: true 
+      - homeassistant-nw
+    group_add:
+      - dialout
+    user: 1000:1000
+    depends_on:
+      - "mosquitto"
 
 volumes:
   config:
-
+  zigbee2mqtt_data:
+  mosquitto:
+networks:
+  homeassistant-nw:
+  reverseproxy-nw:
+    external: true
