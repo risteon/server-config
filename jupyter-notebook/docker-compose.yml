@@ -4,12 +4,20 @@ services:
       image:    jupyter/datascience-notebook
       volumes:
         - workspace:/home/jovyan/work
+        - config:/home/jovyan/.jupyter
       container_name: jupyter_notebook
       restart: unless-stopped
       networks:
         - reverseproxy-nw
 volumes:
   workspace:
+    driver: risteon/buttervolume:latest
+    driver_opts:
+      copyonwrite: "True"
+  config:
+    driver: risteon/buttervolume:latest
+    driver_opts:
+      copyonwrite: "True"
 networks:
   reverseproxy-nw:
     external: true
