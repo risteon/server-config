@@ -46,8 +46,9 @@ services:
       - TZ=Europe/Berlin
     devices:
       # Make sure this matched your adapter location
-      - /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2478546-if00:/dev/ttyACM0
+      - /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0:/dev/ttyUSB0
     networks:
+      - reverseproxy-nw
       - homeassistant-nw
     group_add:
       - dialout
@@ -58,7 +59,12 @@ services:
 volumes:
   config:
   zigbee2mqtt_data:
-  mosquitto:
+    driver: risteon/buttervolume
+    driver_opts:
+      copyonwrite: "true"
+  mosquitto_config:
+  mosquitto_data:
+  mosquitto_log:
 networks:
   homeassistant-nw:
   reverseproxy-nw:
