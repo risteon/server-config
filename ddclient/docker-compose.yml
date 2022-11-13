@@ -1,15 +1,23 @@
 version: "2.1"
 services:
   ddclient:
-    image: linuxserver/ddclient:arm32v7-version-v3.9.1
+    image: linuxserver/ddclient:latest
     container_name: ddclient
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/London
+      - TZ=Europe/Berlin
     volumes:
       - config:/config
+      - cmd:/cmd
     restart: unless-stopped
 
 volumes:
   config:
+    driver: risteon/buttervolume
+    driver_opts:
+      copyonwrite: "true"
+  cmd:
+    driver: risteon/buttervolume
+    driver_opts:
+      copyonwrite: "true"
