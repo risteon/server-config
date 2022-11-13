@@ -56,7 +56,13 @@ networks:
 
 volumes:
   db:
+    driver: risteon/buttervolume
+    driver_opts:
+      copyonwrite: "false"
   nextcloud:
+    driver: risteon/buttervolume
+    driver_opts:
+      copyonwrite: "true"
 
 secrets:
   nextcloud_admin_password:
