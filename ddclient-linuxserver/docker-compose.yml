@@ -1,9 +1,12 @@
-version: "3.2"
+version: "2.1"
 services:
   ddclient:
-    image: ddclient
-    build: ./image
+    image: linuxserver/ddclient:latest
     container_name: ddclient
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
     volumes:
       - config:/config
       - cmd:/cmd
