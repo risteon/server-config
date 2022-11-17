@@ -1,0 +1,38 @@
+version: "3.2"
+services:
+  duplicati:
+    image: lscr.io/linuxserver/duplicati:latest
+    container_name: duplicati
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Europe/London
+#      - CLI_ARGS= #optional
+    volumes:
+      - config:/config
+      - scripts:/scripts
+      - /mnt/data/duplicati:/backup
+      - type: bind
+        source: /btrbk-duplicati/snapshots
+        target: /source
+        read_only: true
+      - /btrbk-duplicati/pipe:/pipe
+    ports:
+      - 8200:8200
+    restart: unless-stopped
+    networks:
+      - reverseproxy-nw
+
+volumes:
+  config:
+    driver: risteon/buttervolume
+    driver_opts:
+      copyonwrite: "true"
+  scripts:
+    driver: risteon/buttervolume
+    driver_opts:
+      copyonwrite: "true"
+networks:
+  reverseproxy-nw:
+    external: true
+
