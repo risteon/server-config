@@ -1,0 +1,6 @@
+#!/bin/bash
+while true
+do
+  eval "sudo /btrbk-duplicati/btrfs_manage_snapshots $(cat /btrbk-duplicati/pipe/btrfs_pipe_in)" > /dev/null 2>&1
+  echo $? > /btrbk-duplicati/pipe/btrfs_pipe_out
+done

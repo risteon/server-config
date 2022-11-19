@@ -1,0 +1,13 @@
+[Unit]
+Description=Service to listen on pipe and create/delete backup snapshots for Duplicati
+
+[Service]
+Type=simple
+User=snapshotuser
+Group=snapshotuser
+ExecStart=/btrbk-duplicati/listener
+#ExecStop=
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

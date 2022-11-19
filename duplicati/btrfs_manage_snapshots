@@ -1,0 +1,75 @@
+#!/bin/bash
+# Create and delete read-only snapshots of btrfs subvolumes under a certain dir. Only this dir is allowed.
+# From Duplicati example:
+#
+# --run-script-before = <filename>
+# Duplicati will run the script before the backup job and waits for its 
+# completion for 60 seconds (default timeout value). After a timeout a 
+# warning is logged and the backup is started.
+# The following exit codes are supported:
+#
+# - 0: OK, run operation
+# - 1: OK, don't run operation
+# - 2: Warning, run operation
+# - 3: Warning, don't run operation
+# - 4: Error, run operation
+# - 5: Error don't run operation
+# - other: Error don't run operation
+#
+# --run-script-before-required = <filename>
+# Duplicati will run the script before the backup job and wait for its 
+# completion for 60 seconds (default timeout value). The backup will only be
+# run if the script completes with the exit code 0. Other exit codes or a
+# timeout will cancel the backup job.
+
+set -u
+src_dir="/var/lib/buttervolume/volumes"
+snapshot_dir="/btrbk-duplicati/snapshots"
+
+create_snapshot () {
+  # get absolute path
+  subvol=$(readlink -f "${src_dir}/${1}")
+  # only allow folders under src_dir
+  if [[ "${subvol}/" != ${src_dir}/* ]]; then
+    exit 1
+  fi
+  
+  btrfs subvolume snapshot -r "${subvol}" "${snapshot_dir}"
+  retval=$?
+  if [ $retval -ne 0 ]; then
+    exit 5
+  else
+    exit 0
+  fi
+}
+
+delete_snapshot () {
+  # get absolute path
+  subvol=$(readlink -f "${snapshot_dir}/${1}")
+  # only allow folders under src_dir
+  if [[ "${subvol}/" != ${snapshot_dir}/* ]]; then
+    exit 1
+  fi
+  
+  btrfs subvolume delete "${subvol}"
+  retval=$?
+  if [ $retval -ne 0 ]; then
+    exit 5
+  else
+    exit 0
+  fi
+}
+
+case "$1" in
+"create")
+    create_snapshot "${2}"
+    ;;
+"delete")
+    delete_snapshot "${2}"
+    ;;
+*)
+    echo "Invalid command ${1}" 1>&2
+    exit 1
+    ;;
+esac
+
