@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eu
+
+echo "create nextcloud_nextcloud" > /pipe/btrfs_pipe_in
+retval=$(cat /pipe/btrfs_pipe_out)
+exit $retval
+
