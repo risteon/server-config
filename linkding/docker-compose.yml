@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  linkding:
+    container_name: "${LD_CONTAINER_NAME:-linkding}"
+    image: sissbruecker/linkding:latest
+    # use docker volume as data dir
+    volumes:
+      - "data:/etc/linkding/data"
+    env_file:
+      - stack.env
+    ports:
+      - "${LD_HOST_PORT:-9090}:9090"
+    networks:
+      - reverseproxy-nw
+    restart: unless-stopped
+
+volumes:
+  data:
+    driver: risteon/buttervolume
+    driver_opts:
+      copyonwrite: "true"
+
+networks:
+  reverseproxy-nw:
+    external: true
