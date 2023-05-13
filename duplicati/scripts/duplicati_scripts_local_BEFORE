@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eu
+
+. /scripts/snapshot.sh
+create_snapshot duplicati_scripts
+

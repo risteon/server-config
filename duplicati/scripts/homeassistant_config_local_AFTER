@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eu
+
+. /scripts/snapshot.sh
+delete_snapshot homeassistant_config
+

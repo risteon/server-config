@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eu
+
+. /scripts/snapshot.sh
+create_snapshot homeassistant_config
+
