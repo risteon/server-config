@@ -1,12 +1,6 @@
 #!/bin/bash
 set -eu
 
-# use a lockfile to guard access to the pipe (in/out)
-lockfile="/pipe/pipe.lockfile"
-exec 3>$lockfile
-flock -x 3
-
-echo "delete nextcloud_nextcloud" > /pipe/btrfs_pipe_in
-retval=$(cat /pipe/btrfs_pipe_out)
-exit $retval
+. /scripts/snapshot.sh
+delete_snapshot nextcloud_nextcloud
 

@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eu
+
+. /scripts/snapshot.sh
+# create_snapshot <volume name> <target name>
+delete_snapshot nextcloud_nextcloud_aws
+
