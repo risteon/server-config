@@ -1,0 +1,35 @@
+appdaemon:
+  latitude: 0
+  longitude: 0
+  elevation: 30
+  time_zone: Europe/Berlin
+  use_dictionary_unpacking: true
+  plugins:
+    HASS:
+      type: hass
+      ha_url: "http://homeassistant:8123"
+      cert_verify: True
+
+logs:
+  main_log:
+    filename: /logs/appdaemon.log
+  access_log:
+    filename: /logs/access.log
+  error_log:
+    filename: /logs/error.log
+  diag_log:
+    filename: /logs/diag.log
+    log_generations: 5
+    log_size: 1024
+    format: "{asctime} {levelname:<8} {appname:<10}: {message}"
+  test_log:
+    name: TestLog
+    filename: /logs/test.log
+
+http:
+  url: http://0.0.0.0:5050
+  password: !secret appdaemon_http_pw
+
+admin:
+api:
+hadashboard:
