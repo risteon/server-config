@@ -23,8 +23,8 @@ services:
     container_name: mosquitto
     volumes:
       - mosquitto_config:/mosquitto/config
-      - mosquitto_log:/mosquitto/log
       - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
     ports:
       - 1883:1883
       - 9001:9001
@@ -56,8 +56,29 @@ services:
     depends_on:
       - "mosquitto"
 
+  appdaemon:
+    container_name: appdaemon
+    image: acockburn/appdaemon:latest
+    restart: unless-stopped
+    volumes:
+      - appdaemon_conf:/conf
+    ports:
+      # Frontend port
+      - 5050:5050
+    environment:
+      - TZ=Europe/Berlin
+      - HA_URL="http://homeassistant:8123"
+    networks:
+      - reverseproxy-nw
+      - homeassistant-nw
+    depends_on:
+      - "homeassistant"
+
 volumes:
   config:
+    driver: risteon/buttervolume
+    driver_opts:
+      copyonwrite: "false"
   zigbee2mqtt_data:
     driver: risteon/buttervolume
     driver_opts:
@@ -65,6 +86,10 @@ volumes:
   mosquitto_config:
   mosquitto_data:
   mosquitto_log:
+  appdaemon_conf:
+    driver: risteon/buttervolume
+    driver_opts:
+      copyonwrite: "true"
 networks:
   homeassistant-nw:
   reverseproxy-nw:
