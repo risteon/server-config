@@ -62,6 +62,7 @@ services:
     restart: unless-stopped
     volumes:
       - appdaemon_conf:/conf
+      - appdaemon_logs:/logs
     ports:
       # Frontend port
       - 5050:5050
@@ -87,6 +88,10 @@ volumes:
   mosquitto_data:
   mosquitto_log:
   appdaemon_conf:
+    driver: risteon/buttervolume
+    driver_opts:
+      copyonwrite: "true"
+  appdaemon_logs:
     driver: risteon/buttervolume
     driver_opts:
       copyonwrite: "true"
