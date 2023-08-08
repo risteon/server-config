@@ -16,7 +16,7 @@ services:
       - postgres_user
 
   app:
-    image: nextcloud:fpm-alpine
+    image: nextcloud:27.0-fpm-alpine
     restart: always
     volumes:
       - nextcloud:/var/www/html
