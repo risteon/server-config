@@ -1,14 +1,16 @@
-version:  '3'
+version: '3'
 services:
   datascience-notebook:
-      image:    jupyter/datascience-notebook
-      volumes:
-        - workspace:/home/jovyan/work
-        - config:/home/jovyan/.jupyter
-      container_name: jupyter_notebook
-      restart: unless-stopped
-      networks:
-        - reverseproxy-nw
+    image: jupyter/datascience-notebook:python-3.11
+    volumes:
+      - workspace:/home/jovyan/work
+      - config:/home/jovyan/.jupyter
+    container_name: jupyter_notebook
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+    networks:
+      - reverseproxy-nw
 volumes:
   workspace:
     driver: risteon/buttervolume:latest

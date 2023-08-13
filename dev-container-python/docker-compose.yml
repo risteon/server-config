@@ -1,0 +1,26 @@
+version: '3'
+services:
+  devcontainer-python:
+    # image: mcr.microsoft.com/devcontainers/anaconda:0-3
+    build:
+      context: anaconda-image
+      dockerfile: Dockerfile
+    container_name: devcontainer-python
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    volumes:
+      - homeassistant_appdaemon_conf:/src
+      - homeassistant_appdaemon_logs:/logs
+    ports: []
+    restart: "no"
+    networks: []
+    command: /bin/sh -c "while sleep 1000; do :; done"
+
+volumes:
+  homeassistant_appdaemon_conf:
+    external: true
+  homeassistant_appdaemon_logs:
+    external: true
+
