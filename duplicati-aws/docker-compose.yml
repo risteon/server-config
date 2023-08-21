@@ -1,7 +1,7 @@
 version: "3.2"
 services:
   duplicati:
-    image: lscr.io/linuxserver/duplicati:development-version-v2.0.6.106-2.0.6.106_canary_2023-05-03
+    image: linuxserver/duplicati:version-v2.0.7.1-2.0.7.1_beta_2023-05-25
     container_name: duplicati-aws
     environment:
       - PUID=0
