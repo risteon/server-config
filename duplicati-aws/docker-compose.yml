@@ -16,6 +16,10 @@ services:
         source: /btrbk-duplicati/snapshots
         target: /source
         read_only: true
+      - type: bind
+        source: /mnt/diskstation
+        target: /diskstation
+        read_only: true
       - /btrbk-duplicati/pipe:/pipe
     ports:
       - 8201:8200
