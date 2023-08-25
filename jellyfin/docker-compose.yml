@@ -1,0 +1,39 @@
+version: '3.5'
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:10.8.10
+    container_name: jellyfin
+    user: 997:997
+    volumes:
+      - config:/config
+      - cache:/cache
+      - type: bind
+        source: /mnt/hdd1
+        target: /media
+        read_only: true
+    ports:
+      - 8096:8096
+    networks:
+      - reverseproxy-nw
+    restart: 'unless-stopped'
+    # Optional - alternative address used for autodiscovery
+    # environment:
+    #  - JELLYFIN_PublishedServerUrl=http://example.com
+    # Optional - may be necessary for docker healthcheck to pass if running in host network mode
+    # extra_hosts:
+    #  - "host.docker.internal:host-gateway"
+
+volumes:
+  config:
+    driver: risteon/buttervolume
+    driver_opts:
+      copyonwrite: "true"
+  cache:
+    driver: risteon/buttervolume
+    driver_opts:
+      copyonwrite: "false"
+
+networks:
+  reverseproxy-nw:
+    external: true
+
