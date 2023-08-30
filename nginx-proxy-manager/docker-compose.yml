@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    image: 'jc21/nginx-proxy-manager:latest'
+    image: 'jc21/nginx-proxy-manager:2.9.22'
     ports:
       - '80:80'
       - '81:81'
@@ -20,7 +20,7 @@ services:
       - nginx-proxy-manager
       - reverseproxy-nw
   db:
-    image: 'jc21/mariadb-aria:latest'
+    image: 'jc21/mariadb-aria:10.4.15'
     environment:
       MYSQL_DATABASE: 'npm'
       MYSQL_USER: 'npm'
