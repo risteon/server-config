@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    image: 'jc21/nginx-proxy-manager:2.9.22'
+    image: 'jc21/nginx-proxy-manager:2.10.4'
     ports:
       - '80:80'
       - '81:81'
