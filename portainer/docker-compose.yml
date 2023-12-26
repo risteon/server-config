@@ -18,6 +18,9 @@ services:
       - reverseproxy-nw
 volumes:
   data:
+    driver: anybox/buttervolume
+    driver_opts:
+      copyonwrite: "true"
 networks:
   reverseproxy-nw:
     external: true
