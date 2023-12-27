@@ -1,12 +1,12 @@
 homeassistant: true
-permit_join: true
+permit_join: false
 mqtt:
   base_topic: zigbee2mqtt
   server: mqtt://mosquitto
 frontend:
   port: 8080
   host: 0.0.0.0
-  url: https://zigbee2mqtt.wachtel.weg
+  url: https://zigbee2mqtt.local.risteon.xyz
 serial:
   port: /dev/ttyUSB0
 advanced:
