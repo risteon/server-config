@@ -17,6 +17,8 @@ services:
     networks:
       - reverseproxy-nw
       - homeassistant-nw
+    depends_on:
+      - "mosquitto"
 
   mosquitto:
     image: eclipse-mosquitto
@@ -30,7 +32,7 @@ services:
       - 9001:9001
     networks:
       - homeassistant-nw
-
+    restart: unless-stopped
 
   zigbee2mqtt:
     container_name: zigbee2mqtt
@@ -77,24 +79,34 @@ services:
 
 volumes:
   config:
-    driver: risteon/buttervolume
+    driver: anybox/buttervolume
     driver_opts:
-      copyonwrite: "false"
+      copyonwrite: "true"
   zigbee2mqtt_data:
-    driver: risteon/buttervolume
+    driver: anybox/buttervolume
     driver_opts:
       copyonwrite: "true"
   mosquitto_config:
+    driver: anybox/buttervolume
+    driver_opts:
+      copyonwrite: "true"
   mosquitto_data:
+    driver: anybox/buttervolume
+    driver_opts:
+      copyonwrite: "true"
   mosquitto_log:
+    driver: anybox/buttervolume
+    driver_opts:
+      copyonwrite: "true"
   appdaemon_conf:
-    driver: risteon/buttervolume
+    driver: anybox/buttervolume
     driver_opts:
       copyonwrite: "true"
   appdaemon_logs:
-    driver: risteon/buttervolume
+    driver: anybox/buttervolume
     driver_opts:
       copyonwrite: "true"
+
 networks:
   homeassistant-nw:
   reverseproxy-nw:
