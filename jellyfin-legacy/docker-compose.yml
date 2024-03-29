@@ -1,27 +1,24 @@
+version: '3.5'
 services:
   jellyfin:
-    image: jellyfin/jellyfin:10.8.13
+    image: jellyfin/jellyfin:10.8.10
     container_name: jellyfin
-    user: 99:100
+    user: 997:997
     volumes:
       - config:/config
       - cache:/cache
       - type: bind
-        source: /mnt/apollo-nfs-movies
-        target: /media-movies
+        source: /mnt/hdd1
+        target: /media
         read_only: true
       - type: bind
-        source: /mnt/apollo-nfs-tv_shows
-        target: /media-tv_shows
-        read_only: true
-      - type: bind
-        source: /mnt/apollo-cifs-videos
-        target: /media-videos
+        source: /mnt/ssd2
+        target: /media2
         read_only: true
     ports:
       - 8096:8096
-      # networks:
-      # - reverseproxy-nw
+    networks:
+      - reverseproxy-nw
     restart: 'unless-stopped'
     # Optional - alternative address used for autodiscovery
     # environment:
@@ -32,13 +29,15 @@ services:
 
 volumes:
   config:
-    driver: anybox/buttervolume
+    driver: risteon/buttervolume
     driver_opts:
       copyonwrite: "true"
   cache:
-    driver: anybox/buttervolume
+    driver: risteon/buttervolume
     driver_opts:
       copyonwrite: "false"
-    # networks:
-    # reverseproxy-nw:
-    # external: true
+
+networks:
+  reverseproxy-nw:
+    external: true
+
