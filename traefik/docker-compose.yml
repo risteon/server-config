@@ -10,11 +10,13 @@ services:
     ports:
       - 80:80
       - 443:443
-      # environment:
-      # - CF_DNS_API_TOKEN=YOUR_API_TOKEN
+    environment:
+      - CF_DNS_API_TOKEN=/run/secrets/cf_dns_api_token
       # If you choose to use an API Key instead of a Token, specify your email as well
       # - CF_API_EMAIL=user@example.com
       # - CF_API_KEY=YOUR_API_KEY
+    secrets:
+      - cf_dns_api_token
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -25,7 +27,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
       - "traefik.http.routers.traefik.rule=Host(`traefik.local.risteon.xyz`)"
-      - "traefik.http.middlewares.traefik-auth.basicauth.users=risteon:$$apr1$$MHz4Fgat$$IyO.izGBhFbXheg7IeoOD0"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=risteon:xx"
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
@@ -33,11 +35,17 @@ services:
       - "traefik.http.routers.traefik-secure.rule=Host(`traefik.local.risteon.xyz`)"
       - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
       - "traefik.http.routers.traefik-secure.tls=true"
-      #- "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
       - "traefik.http.routers.traefik-secure.tls.domains[0].main=local.risteon.xyz"
       - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.local.risteon.xyz"
+      - "traefik.http.routers.traefik-secure.tls.domains[1].main=risteon.xyz"
+      - "traefik.http.routers.traefik-secure.tls.domains[1].sans=*.risteon.xyz"
       - "traefik.http.routers.traefik-secure.service=api@internal"
 
 networks:
   proxy:
     external: true
+
+secrets:
+  cf_dns_api_token:
+    file: ./cf_dns_api_token.txt # put admin password to this file

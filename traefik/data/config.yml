@@ -1,15 +1,33 @@
 http:
  #region routers 
-  # routers:
-    # proxmox:
+  routers:
+    pve1:
+      entryPoints:
+        - "https"
+      rule: "Host(`pve1.local.risteon.xyz`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+      service: pve1
+    homeassistant-futro:
+      entryPoints:
+        - "https"
+      rule: "Host(`home.risteon.xyz`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+      service: homeassistant-futro
+    # nextcloud:
     #   entryPoints:
     #     - "https"
-    #   rule: "Host(`proxmox.local.example.com`)"
+    #   rule: "Host(`storage.risteon.xyz`)"
     #   middlewares:
     #     - default-headers
-    #     - https-redirectscheme
+    #     # - https-redirectscheme
     #   tls: {}
-    #   service: proxmox
+    #   service: nextcloud
     # pihole:
     #   entryPoints:
     #     - "https"
@@ -132,13 +150,29 @@ http:
     #   tls: {}
     #   service: openmediavault
 
-#endregion
-#region services
-  # services:
-    # proxmox:
+# endregion
+# region services
+  services:
+    pve1:
+      loadBalancer:
+        servers:
+          - url: "https://100.10.10.11:8006"
+        passHostHeader: true
+    homeassistant-futro:
+      loadBalancer:
+        servers:
+          - url: "http://100.10.10.12:8123"
+          # - url: "https://100.10.10.12"
+        passHostHeader: true
+    # linkding:
     #   loadBalancer:
     #     servers:
-    #       - url: "https://192.168.0.100:8006"
+    #       - url: "http://100.10.10.12:9090"
+    #     passHostHeader: true
+    # nextcloud:
+    #   loadBalancer:
+    #     servers:
+    #       - url: "http://100.10.10.12"
     #     passHostHeader: true
     # pihole:
     #   loadBalancer:
@@ -246,7 +280,7 @@ http:
     default-whitelist:
       ipWhiteList:
         sourceRange:
-        - "10.0.0.0/8"
+        - "100.10.10.0/8"
         - "192.168.0.0/16"
         - "172.16.0.0/12"
 
