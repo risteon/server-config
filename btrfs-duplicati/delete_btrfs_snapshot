@@ -1,0 +1,13 @@
+#!/bin/bash
+# Delete snapshots of btrfs subvolumes under a certain dir. Only this dir is allowed.
+set -eu
+snapshot_dir="/btrfs-duplicati/snapshots"
+# get absolute path
+subvol=$(readlink -f "${snapshot_dir}/${1}")
+
+# only allow folders under src_dir
+if [[ "${subvol}/" != ${snapshot_dir}/* ]]; then
+  exit 1
+fi
+
+btrfs subvolume delete "${subvol}"

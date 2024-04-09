@@ -1,0 +1,13 @@
+#!/bin/bash
+# Create read-only snapshots of btrfs subvolumes under a certain dir. Only this dir is allowed.
+set -eux
+src_dir="/var/lib/buttervolume/volumes"
+# get absolute path
+subvol=$(readlink -f "${src_dir}/${1}")
+
+# only allow folders under src_dir
+if [[ "${subvol}/" != ${src_dir}/* ]]; then
+  exit 1
+fi
+
+btrfs subvolume snapshot -r "${subvol}" /btrfs-duplicati/snapshots/
