@@ -10,10 +10,10 @@ services:
 
 volumes:
   config:
-    driver: risteon/buttervolume
+    driver: anybox/buttervolume
     driver_opts:
       copyonwrite: "true"
   cmd:
-    driver: risteon/buttervolume
+    driver: anybox/buttervolume
     driver_opts:
       copyonwrite: "true"
