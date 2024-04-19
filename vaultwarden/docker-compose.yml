@@ -1,0 +1,37 @@
+name: vaultwarden
+
+services:
+  vaultwarden:
+    image: vaultwarden/server:1.30.5-alpine
+    container_name: vaultwarden
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    networks:
+      - proxy
+    volumes:
+      - vw-data:/data:rw
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.vaultwarden-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.vaultwarden-https-redirect.redirectScheme.permanent=true"
+      - "traefik.http.routers.vaultwarden.entrypoints=http"
+      - "traefik.http.routers.vaultwarden.rule=Host(`vault.risteon.xyz`)"
+      - "traefik.http.routers.vaultwarden.middlewares=vaultwarden-https-redirect"
+      - "traefik.http.routers.vaultwarden-secure.entrypoints=https"
+      - "traefik.http.routers.vaultwarden-secure.rule=Host(`vault.risteon.xyz`)"
+      - "traefik.http.routers.vaultwarden-secure.tls=true"
+      - "traefik.http.routers.vaultwarden-secure.service=vaultwarden"
+      - "traefik.http.services.vaultwarden.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+
+networks:
+  proxy:
+    external: true
+
+volumes:
+  vw-data:
+    driver: anybox/buttervolume
+    driver_opts:
+      copyonwrite: "true"
