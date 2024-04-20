@@ -57,6 +57,3 @@ volumes:
     driver: anybox/buttervolume
     driver_opts:
       copyonwrite: "false"
-    # networks:
-    # reverseproxy-nw:
-    # external: true
