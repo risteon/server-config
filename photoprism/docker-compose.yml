@@ -34,7 +34,7 @@ services:
       PHOTOPRISM_ORIGINALS_LIMIT: 10000 # file size limit for originals in MB (increase for high-res video)
       PHOTOPRISM_HTTP_COMPRESSION: "gzip" # improves transfer speed and bandwidth utilization (none or gzip)
       PHOTOPRISM_LOG_LEVEL: "info" # log level: trace, debug, info, warning, error, fatal, or panic
-      PHOTOPRISM_READONLY: "true" # do not modify originals directory (reduced functionality)
+      PHOTOPRISM_READONLY: "false" # do not modify originals directory (reduced functionality)
       PHOTOPRISM_EXPERIMENTAL: "false" # enables experimental features
       PHOTOPRISM_DISABLE_CHOWN: "false" # disables updating storage permissions via chmod and chown on startup
       PHOTOPRISM_DISABLE_WEBDAV: "false" # disables built-in WebDAV server
@@ -65,11 +65,11 @@ services:
       ## Run/install on first startup (options: update https gpu tensorflow davfs clitools clean):
       # PHOTOPRISM_INIT: "https gpu tensorflow"
       ## Run as a non-root user after initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
-      # PHOTOPRISM_UID: 1000
-      # PHOTOPRISM_GID: 1000
+      PHOTOPRISM_UID: 994
+      PHOTOPRISM_GID: 984
       # PHOTOPRISM_UMASK: 0000
       ## Start as non-root user before initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
-      # user: "1000:1000"
+      user: "994:984"
       ## Share hardware devices with FFmpeg and TensorFlow (optional):
       # devices:
       #  - "/dev/dri:/dev/dri"                         # Intel QSV
@@ -87,7 +87,7 @@ services:
       - type: bind
         source: /mnt/apollo-cifs-pictures
         target: /photoprism/originals
-        read_only: true
+        read_only: false
       # - "/example/family:/photoprism/originals/family" # *Additional* media folders can be mounted like this
       # - "~/Import:/photoprism/import"                  # *Optional* base folder from which files can be imported to originals
       - storage:/photoprism/storage # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
