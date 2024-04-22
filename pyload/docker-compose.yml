@@ -1,27 +1,47 @@
-version: "2.1"
 services:
   pyload-ng:
     image: lscr.io/linuxserver/pyload-ng:latest
     container_name: pyload-ng
+    networks:
+      - proxy
     environment:
-      - PUID=996
-      - PGID=996
+      - PUID=993
+      - PGID=983
       - TZ=Etc/UTC
     volumes:
       - config:/config
-      - downloads:/downloads
-    ports:
-      - 8001:8000
-#      - 9666:9666 #optional
+      - type: bind
+        source: /mnt/cache/pyload
+        target: /downloads
+        read_only: false
+    # ports:
+    #  - 8001:8000
+    #      - 9666:9666 #optional
     restart: unless-stopped
+    # user: "993:983"
 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.pyload-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.pyload-local.ipwhitelist.sourcerange=127.0.0.1/32, 100.10.10.0/24"
+      - "traefik.http.routers.pyload.entrypoints=http"
+      - "traefik.http.routers.pyload.rule=Host(`pyload.local.risteon.xyz`)"
+      - "traefik.http.routers.pyload.middlewares=pyload-https-redirect"
+      - "traefik.http.routers.pyload-secure.entrypoints=https"
+      - "traefik.http.routers.pyload-secure.rule=Host(`pyload.local.risteon.xyz`)"
+      - "traefik.http.routers.pyload-secure.tls=true"
+      - "traefik.http.routers.pyload-secure.service=pyload"
+      - "traefik.http.routers.pyload-secure.middlewares=pyload-local"
+      - "traefik.http.services.pyload.loadbalancer.server.port=8000"
+      # - "traefik.http.services.pyload.loadbalancer.server.scheme=https"
+      - "traefik.docker.network=proxy"
+
+networks:
+  proxy:
+    external: true
 
 volumes:
   config:
-    driver: risteon/buttervolume
+    driver: anybox/buttervolume
     driver_opts:
       copyonwrite: "true"
-  downloads:
-    driver: risteon/buttervolume
-    driver_opts:
-      copyonwrite: "false"
