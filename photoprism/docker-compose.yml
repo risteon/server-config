@@ -65,8 +65,8 @@ services:
       ## Run/install on first startup (options: update https gpu tensorflow davfs clitools clean):
       # PHOTOPRISM_INIT: "https gpu tensorflow"
       ## Run as a non-root user after initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
-      PHOTOPRISM_UID: 994
-      PHOTOPRISM_GID: 984
+      # PHOTOPRISM_UID: 994
+      # PHOTOPRISM_GID: 984
       # PHOTOPRISM_UMASK: 0000
       ## Start as non-root user before initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
       user: "994:984"
@@ -128,7 +128,7 @@ services:
     command: --innodb-buffer-pool-size=512M --transaction-isolation=READ-COMMITTED --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=120
     ## Never store database files on an unreliable device such as a USB flash drive, an SD card, or a shared network folder:
     volumes:
-      - database:/var/lib/mysql" # DO NOT REMOVE
+      - database:/var/lib/mysql # DO NOT REMOVE
     networks:
       - photoprism
     env_file:
