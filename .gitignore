@@ -6,3 +6,4 @@
 **/postgres_password.txt
 **/postgres_user.txt
 **/traefik_auth.txt
+**/.env
