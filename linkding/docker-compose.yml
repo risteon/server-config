@@ -7,8 +7,8 @@ services:
       - "data:/etc/linkding/data"
     env_file:
       - stack.env
-    ports:
-      - "${LD_HOST_PORT:-9090}:9090"
+    # ports:
+    #   - "${LD_HOST_PORT:-9090}:9090"
     networks:
       - proxy
     restart: unless-stopped
