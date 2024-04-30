@@ -3,9 +3,13 @@ services:
     image: ddclient
     build: ./image
     container_name: ddclient
+    # need to get ipv6 from host interface
+    network_mode: "host"
+    user: 990:982
     volumes:
       - config:/config
-      - cmd:/cmd
+      - cache:/var/cache/ddclient
+    #  - cmd:/cmd
     restart: unless-stopped
 
 volumes:
@@ -13,7 +17,11 @@ volumes:
     driver: anybox/buttervolume
     driver_opts:
       copyonwrite: "true"
-  cmd:
+  cache:
     driver: anybox/buttervolume
     driver_opts:
       copyonwrite: "true"
+        # cmd:
+        #   driver: anybox/buttervolume
+        #   driver_opts:
+        #     copyonwrite: "true"
